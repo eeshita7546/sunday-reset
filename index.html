@@ -28,7 +28,6 @@
           <a href="#reviews">Stories</a>
           <a href="#pricing">Pricing</a>
         </nav>
-        <a class="btn btn-sm" href="#final-cta">Start Free</a>
       </div>
     </header>
 
@@ -37,46 +36,22 @@
         <div class="container hero-grid">
           <div class="hero-copy">
             <p class="eyebrow">Your weekly wellness ritual for planning</p>
-            <h1>Feel calm on Monday before Monday starts.</h1>
+            <h1>Reclaim your week before it starts</h1>
             <p class="lead">
               Sunday Reset helps you reflect, set goals, track habits, and organize tasks in
               one beautiful 30-minute weekly flow.
             </p>
             <div class="hero-cta">
-              <a class="btn" href="#experience">Try The 30-Minute Reset</a>
-              <a class="btn btn-outline" href="#how">See How It Works</a>
+              <a class="btn" href="#experience">Try Reset</a>
             </div>
             <p class="mini-proof">12,000+ planners use Sunday Reset weekly.</p>
-          </div>
-
-          <div class="hero-media">
-            <img
-              src="./hero-custom-cropped.png"
-              alt="Reflect Release Reset hero artwork"
-            />
-            <div class="media-note">
-              <p>Weekly Clarity</p>
-              <strong>30 min on Sunday</strong>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section trust">
-        <div class="container trust-row">
-          <p>Used by founders, designers, creators, and students</p>
-          <div>
-            <span>STUDIO ONE</span>
-            <span>NORTH TEAM</span>
-            <span>BLOOM LAB</span>
-            <span>PIXEL CO</span>
           </div>
         </div>
       </section>
 
       <section class="section split">
         <div class="container split-grid">
-          <article class="panel">
+          <article class="panel split-panel is-active" data-split-panel role="button" tabindex="0" aria-pressed="true">
             <h2>Why the week starts in chaos</h2>
             <p>
               Most people begin Monday reacting. Tasks are scattered, priorities are unclear,
@@ -87,15 +62,61 @@
               <li>Goals disconnected from daily tasks</li>
               <li>Habit tracking breaks by Tuesday</li>
             </ul>
+            <p class="panel-reveal">
+              Before: your week starts with noise, not intention.
+            </p>
           </article>
-          <article class="panel accent">
+          <article class="panel accent split-panel" data-split-panel role="button" tabindex="0" aria-pressed="false">
             <h2>Sunday Reset fixes this in one ritual</h2>
             <p>
               Instead of juggling tools, you run one guided weekly reset that brings clarity to
               your goals, habits, and schedule.
             </p>
             <a class="text-link" href="#experience">Open the interactive demo</a>
+            <p class="panel-reveal">
+              After: your priorities are clear before Monday begins.
+            </p>
           </article>
+        </div>
+      </section>
+
+      <section class="section peace">
+        <div class="container">
+          <h2>Design your peace</h2>
+          <div class="peace-grid">
+            <article class="peace-card">
+              <p class="peace-icon icon-sparkle" aria-hidden="true">✦</p>
+              <h3>reflect</h3>
+              <p>
+                Guided journaling prompts to process wins, losses, and lessons from
+                the past week. Close the loop.
+              </p>
+            </article>
+            <article class="peace-card">
+              <p class="peace-icon icon-ring" aria-hidden="true">◎</p>
+              <h3>clear</h3>
+              <p>
+                A dedicated brain-dump space to get every loose thought out of your
+                head and into a trusted system.
+              </p>
+            </article>
+            <article class="peace-card">
+              <p class="peace-icon icon-wave" aria-hidden="true">∿</p>
+              <h3>align</h3>
+              <p>
+                Select just 3 priorities for the upcoming week. Ruthless
+                prioritization over endless to-do lists.
+              </p>
+            </article>
+            <article class="peace-card">
+              <p class="peace-icon icon-pie" aria-hidden="true">◔</p>
+              <h3>schedule</h3>
+              <p>
+                Time-block your deep work and rest. Visualize your week before you
+                step into it.
+              </p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -135,10 +156,43 @@
           </div>
 
           <aside class="score-card">
+            <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
             <p>Weekly Reset Progress</p>
             <h3 id="demo-progress-text">0% complete</h3>
             <div class="demo-meter" aria-hidden="true">
               <span id="demo-progress-bar"></span>
+            </div>
+            <p class="weekly-note" id="weekly-note">Start your reset to build momentum.</p>
+
+            <div class="pulse-block">
+              <p class="pulse-label">Habit pulse</p>
+              <div class="pulse-days" role="group" aria-label="Habit pulse days">
+                <button type="button" class="day-chip" data-day-chip>Mon</button>
+                <button type="button" class="day-chip" data-day-chip>Tue</button>
+                <button type="button" class="day-chip" data-day-chip>Wed</button>
+                <button type="button" class="day-chip" data-day-chip>Thu</button>
+                <button type="button" class="day-chip" data-day-chip>Fri</button>
+                <button type="button" class="day-chip" data-day-chip>Sat</button>
+                <button type="button" class="day-chip" data-day-chip>Sun</button>
+              </div>
+            </div>
+
+            <div class="energy-block">
+              <div class="energy-row">
+                <span>Week Intention</span>
+                <strong id="intention-value">Steady</strong>
+              </div>
+              <div class="intention-chips" role="group" aria-label="Week intention">
+                <button type="button" class="intent-chip is-on" data-intent-chip data-intent-score="4">
+                  Steady
+                </button>
+                <button type="button" class="intent-chip" data-intent-chip data-intent-score="7">
+                  Focused
+                </button>
+                <button type="button" class="intent-chip" data-intent-chip data-intent-score="10">
+                  Ambitious
+                </button>
+              </div>
             </div>
 
             <div class="stats">
@@ -147,36 +201,11 @@
                 <strong id="focus-level">Low</strong>
               </article>
               <article>
-                <span>Monday Clarity</span>
+                <span>Clarity</span>
                 <strong id="monday-clarity">Unclear</strong>
               </article>
             </div>
           </aside>
-        </div>
-      </section>
-
-      <section class="section features" id="features">
-        <div class="container">
-          <p class="eyebrow">What you get</p>
-          <h2>Everything for a structured week</h2>
-          <div class="feature-grid">
-            <article>
-              <h3>Reflection Prompts</h3>
-              <p>Capture what worked, what drained you, and what to improve.</p>
-            </article>
-            <article>
-              <h3>Weekly Goal Planner</h3>
-              <p>Set clear goals that connect to your daily action list.</p>
-            </article>
-            <article>
-              <h3>Habit Tracker</h3>
-              <p>Track consistency with a simple, motivating weekly view.</p>
-            </article>
-            <article>
-              <h3>Priority Task Board</h3>
-              <p>Organize work clearly into Must do, Should do, and Nice to do.</p>
-            </article>
-          </div>
         </div>
       </section>
 
@@ -186,24 +215,26 @@
           <h2>Your 3-step Sunday flow</h2>
           <div class="steps" id="steps-flow">
             <article class="step is-active" data-step>
-              <span>01</span>
-              <h3>Review (10 min)</h3>
-              <p>Reflect on wins, misses, and lessons from the week behind you.</p>
+              <span class="step-number">01</span>
+              <div class="step-content">
+                <h3>Review (10 min)</h3>
+                <p>Reflect on wins, misses, and lessons from the week behind you.</p>
+              </div>
             </article>
             <article class="step" data-step>
-              <span>02</span>
-              <h3>Plan (10 min)</h3>
-              <p>Set goals and lock in habits that support your outcomes.</p>
+              <span class="step-number">02</span>
+              <div class="step-content">
+                <h3>Plan (10 min)</h3>
+                <p>Set goals and lock in habits that support your outcomes.</p>
+              </div>
             </article>
             <article class="step" data-step>
-              <span>03</span>
-              <h3>Organize (10 min)</h3>
-              <p>Map tasks and priorities so Monday starts focused and calm.</p>
+              <span class="step-number">03</span>
+              <div class="step-content">
+                <h3>Organize (10 min)</h3>
+                <p>Map tasks and priorities so Monday starts focused and calm.</p>
+              </div>
             </article>
-          </div>
-          <p class="step-status" id="step-status">Current step: 1 of 3</p>
-          <div class="center">
-            <button type="button" class="btn btn-outline" id="next-step">Next Step</button>
           </div>
         </div>
       </section>
@@ -215,34 +246,32 @@
           <div class="review-grid">
             <article>
               <p>“I stopped dreading Mondays. I know my exact priorities now.”</p>
+              <span class="review-stars">★★★★★</span>
               <strong>Freelance Designer</strong>
             </article>
             <article>
               <p>“My goals are no longer random. The weekly ritual keeps me consistent.”</p>
+              <span class="review-stars">★★★★☆</span>
               <strong>Product Manager</strong>
             </article>
             <article>
               <p>“This replaced my scattered notes and made planning actually enjoyable.”</p>
+              <span class="review-stars">★★★★★</span>
               <strong>Founder</strong>
             </article>
+          </div>
+          <div class="review-more" aria-label="More reviews available">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <p>Plus 120+ more weekly reviews</p>
           </div>
         </div>
       </section>
 
       <section class="section pricing" id="pricing">
-        <div class="container pricing-wrap">
-          <article class="price-card">
-            <h3>Free</h3>
-            <p class="price">$0 <span>/month</span></p>
-            <ul>
-              <li>Weekly reset flow</li>
-              <li>Reflection + goals templates</li>
-              <li>Basic habit tracking</li>
-            </ul>
-            <a class="btn btn-outline" href="#final-cta">Start Free</a>
-          </article>
-          <article class="price-card featured">
-            <p class="badge">Most Popular</p>
+        <div class="container pricing-wrap single-plan">
+          <article class="price-card featured ref-plan" id="pro-plan">
             <h3>Pro</h3>
             <p class="price">$8 <span>/month</span></p>
             <ul>
@@ -258,8 +287,8 @@
       <section class="section final-cta" id="final-cta">
         <div class="container">
           <h2>Start this Sunday. Walk into Monday with a plan.</h2>
-          <p>No credit card required. Your first reset takes less than 30 minutes.</p>
-          <a class="btn" href="#top">Start Your Free Reset</a>
+          <p>No credit card required. Your reset takes less than 30 minutes.</p>
+          <a class="btn" href="#pro-plan">Reset Yourself Free</a>
         </div>
       </section>
     </main>
@@ -269,7 +298,7 @@
         <p>Sunday Reset</p>
         <nav aria-label="Footer links">
           <a href="#about">About</a>
-          <a href="#features">Features</a>
+          <a href="#experience">Try Now</a>
           <a href="#pricing">Pricing</a>
         </nav>
       </div>

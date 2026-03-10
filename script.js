@@ -1,136 +1,191 @@
 (() => {
-  const grid = document.getElementById("product-grid");
-  const cards = Array.from(grid ? grid.querySelectorAll(".card") : []);
-  const search = document.getElementById("search");
-  const hairBase = document.getElementById("hair-base");
-  const colorFamily = document.getElementById("color-family");
-  const chips = Array.from(document.querySelectorAll(".chip"));
-  const resetBtn = document.getElementById("reset");
-  const count = document.getElementById("result-count");
-  const empty = document.getElementById("empty");
-  const prepNote = document.getElementById("prep-note");
-
-  let activeChip = "all";
-
-  function matchesChip(card) {
-    const base = card.dataset.hairBase;
-    const bleach = card.dataset.bleach;
-    const fade = card.dataset.fade;
-
-    if (activeChip === "all") return true;
-    if (activeChip === "no-bleach") return bleach === "no";
-    if (activeChip === "dark-hair") return base === "dark";
-    if (activeChip === "cool-fade") return fade === "cool";
-    if (activeChip === "warm-fade") return fade === "warm";
-    return true;
+  // Keep the user's scroll position on refresh/navigation within this page.
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
   }
-
-  function updatePrepNote(visibleCards) {
-    if (!prepNote) return;
-
-    if (!visibleCards.length) {
-      prepNote.textContent = "No matching shades right now. Reset filters to view prep guidance.";
-      return;
-    }
-
-    const needBleach = visibleCards.some((card) => card.dataset.bleach === "yes");
-    const allNoBleach = visibleCards.every((card) => card.dataset.bleach === "no");
-
-    if (allNoBleach) {
-      prepNote.textContent = "Great news: all visible shades can be used without bleach.";
-      return;
-    }
-
-    if (needBleach) {
-      prepNote.textContent = "Current results include shades that may need pre-lightening. Show bleach only as a separate recommendation.";
-    }
-  }
-
-  function applyFilters() {
-    const term = (search ? search.value.trim().toLowerCase() : "") || "";
-    const baseValue = hairBase ? hairBase.value : "all";
-    const familyValue = colorFamily ? colorFamily.value : "all";
-
-    let visible = 0;
-    const visibleCards = [];
-
-    cards.forEach((card) => {
-      const name = (card.dataset.name || "").toLowerCase();
-      const base = card.dataset.hairBase;
-      const family = card.dataset.family;
-
-      const matchesSearch = !term || name.includes(term);
-      const matchesBase = baseValue === "all" || base === baseValue;
-      const matchesFamily = familyValue === "all" || family === familyValue;
-      const show = matchesSearch && matchesBase && matchesFamily && matchesChip(card);
-
-      card.classList.toggle("is-hidden", !show);
-
-      if (show) {
-        visible += 1;
-        visibleCards.push(card);
-      }
-    });
-
-    if (count) {
-      count.textContent = `Showing ${visible} shade${visible === 1 ? "" : "s"}`;
-    }
-
-    if (empty) {
-      empty.classList.toggle("is-hidden", visible !== 0);
-    }
-
-    updatePrepNote(visibleCards);
-  }
-
-  chips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      chips.forEach((item) => item.classList.remove("is-on"));
-      chip.classList.add("is-on");
-      activeChip = chip.dataset.chip || "all";
-      applyFilters();
-    });
-  });
-
-  if (resetBtn) {
-    resetBtn.addEventListener("click", () => {
-      if (search) search.value = "";
-      if (hairBase) hairBase.value = "all";
-      if (colorFamily) colorFamily.value = "all";
-
-      activeChip = "all";
-      chips.forEach((item) => {
-        item.classList.toggle("is-on", item.dataset.chip === "all");
-      });
-
-      applyFilters();
+  const savedScrollY = sessionStorage.getItem("sr-scroll-y");
+  if (savedScrollY) {
+    window.addEventListener("load", () => {
+      window.scrollTo(0, Number(savedScrollY));
     });
   }
 
-  [search, hairBase, colorFamily].forEach((control) => {
-    if (!control) return;
-    control.addEventListener("input", applyFilters);
-    control.addEventListener("change", applyFilters);
-  });
+  const demoInputs = Array.from(document.querySelectorAll("input[data-demo-item]"));
+  const progressBar = document.getElementById("demo-progress-bar");
+  const progressText = document.getElementById("demo-progress-text");
+  const completeAllBtn = document.getElementById("demo-complete-all");
+  const focusLevel = document.getElementById("focus-level");
+  const mondayClarity = document.getElementById("monday-clarity");
+  const weeklyNote = document.getElementById("weekly-note");
+  const confettiLayer = document.getElementById("confetti-layer");
+  const dayChips = Array.from(document.querySelectorAll("[data-day-chip]"));
+  const intentChips = Array.from(document.querySelectorAll("[data-intent-chip]"));
+  const intentionValue = document.getElementById("intention-value");
 
-  const revealItems = Array.from(document.querySelectorAll(".reveal"));
-  if ("IntersectionObserver" in window && revealItems.length) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 }
+  const steps = Array.from(document.querySelectorAll("[data-step]"));
+  const nextStepBtn = document.getElementById("next-step");
+  const stepStatus = document.getElementById("step-status");
+  const splitPanels = Array.from(document.querySelectorAll("[data-split-panel]"));
+  let activeStepIndex = 0;
+  let confettiPlayed = false;
+
+  function launchConfetti() {
+    if (!confettiLayer) return;
+    const colors = ["#c7e4be", "#f3d18a", "#d3dff1", "#f2b8b5", "#d5e7db"];
+    for (let i = 0; i < 26; i += 1) {
+      const piece = document.createElement("span");
+      piece.className = "confetti";
+      piece.style.left = `${Math.random() * 100}%`;
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.setProperty("--dx", `${Math.random() * 120 - 60}px`);
+      piece.style.animationDelay = `${Math.random() * 220}ms`;
+      confettiLayer.appendChild(piece);
+      setTimeout(() => piece.remove(), 1500);
+    }
+  }
+
+  function updateDemoStats(percent) {
+    if (!focusLevel || !mondayClarity) return;
+    const activeDays = dayChips.filter((chip) => chip.classList.contains("is-on")).length;
+    const activeIntent = intentChips.find((chip) => chip.classList.contains("is-on"));
+    const intentScore = Number(
+      activeIntent ? activeIntent.getAttribute("data-intent-score") : 4
+    );
+    const intentLabel = activeIntent ? activeIntent.textContent.trim() : "Steady";
+    const combinedScore = Math.round(
+      percent * 0.62 + (activeDays / 7) * 24 + intentScore * 1.4
     );
 
-    revealItems.forEach((item) => observer.observe(item));
-  } else {
-    revealItems.forEach((item) => item.classList.add("is-visible"));
+    if (combinedScore < 40) {
+      focusLevel.textContent = "Low";
+      mondayClarity.textContent = "Unclear";
+      if (weeklyNote) weeklyNote.textContent = "Start your reset to build momentum.";
+      return;
+    }
+
+    if (combinedScore < 75) {
+      focusLevel.textContent = "Medium";
+      mondayClarity.textContent = "Getting Clear";
+      if (weeklyNote) {
+        if (intentLabel === "Steady") {
+          weeklyNote.textContent = "Steady pace is working. Keep your rhythm consistent.";
+        } else if (intentLabel === "Focused") {
+          weeklyNote.textContent = "Focused mode is active. Protect your top 3 priorities.";
+        } else {
+          weeklyNote.textContent = "Ambitious setup. Keep your plan realistic and intentional.";
+        }
+      }
+      return;
+    }
+
+    focusLevel.textContent = "High";
+    mondayClarity.textContent = "Very Clear";
+    if (weeklyNote) weeklyNote.textContent = "Strong setup. Monday will feel calm and focused.";
   }
 
-  applyFilters();
+  function setDemoProgress() {
+    if (!demoInputs.length || !progressBar || !progressText) return;
+
+    const completeCount = demoInputs.filter((item) => item.checked).length;
+    const percent = Math.round((completeCount / demoInputs.length) * 100);
+
+    progressBar.style.width = `${percent}%`;
+    progressText.textContent = `${percent}% complete`;
+    updateDemoStats(percent);
+
+    if (percent === 100 && !confettiPlayed) {
+      confettiPlayed = true;
+      launchConfetti();
+    }
+    if (percent < 100) {
+      confettiPlayed = false;
+    }
+  }
+
+  function getCurrentPercent() {
+    if (!demoInputs.length) return 0;
+    const completeCount = demoInputs.filter((item) => item.checked).length;
+    return Math.round((completeCount / demoInputs.length) * 100);
+  }
+
+  function setActiveStep(index) {
+    if (!steps.length || !stepStatus) return;
+
+    steps.forEach((step, i) => {
+      step.classList.toggle("is-active", i === index);
+    });
+
+    activeStepIndex = index;
+    stepStatus.textContent = `Current step: ${activeStepIndex + 1} of ${steps.length}`;
+  }
+
+  demoInputs.forEach((input) => {
+    input.addEventListener("change", setDemoProgress);
+  });
+
+  dayChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      chip.classList.toggle("is-on");
+      chip.setAttribute("aria-pressed", chip.classList.contains("is-on") ? "true" : "false");
+      setDemoProgress();
+    });
+  });
+
+  intentChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      intentChips.forEach((other) => {
+        other.classList.remove("is-on");
+        other.setAttribute("aria-pressed", "false");
+      });
+      chip.classList.add("is-on");
+      chip.setAttribute("aria-pressed", "true");
+      if (intentionValue) intentionValue.textContent = chip.textContent.trim();
+      setDemoProgress();
+    });
+  });
+
+  if (completeAllBtn) {
+    completeAllBtn.addEventListener("click", () => {
+      // Recalculate progress from current selections only.
+      setDemoProgress();
+      if (getCurrentPercent() === 100) {
+        launchConfetti();
+      }
+    });
+  }
+
+  if (nextStepBtn) {
+    nextStepBtn.addEventListener("click", () => {
+      if (!steps.length) return;
+      const nextIndex = (activeStepIndex + 1) % steps.length;
+      setActiveStep(nextIndex);
+    });
+  }
+
+  if (splitPanels.length) {
+    const activatePanel = (target) => {
+      splitPanels.forEach((panel) => {
+        const isActive = panel === target;
+        panel.classList.toggle("is-active", isActive);
+        panel.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+    };
+
+    splitPanels.forEach((panel) => {
+      panel.addEventListener("click", () => activatePanel(panel));
+      panel.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          activatePanel(panel);
+        }
+      });
+    });
+  }
+
+  setDemoProgress();
+  setActiveStep(activeStepIndex);
+
+  window.addEventListener("beforeunload", () => {
+    sessionStorage.setItem("sr-scroll-y", String(window.scrollY));
+  });
 })();
